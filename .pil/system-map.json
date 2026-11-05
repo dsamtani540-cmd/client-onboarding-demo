@@ -1,0 +1,37 @@
+{
+  "about": "What PIL reads when the Product Owner presses 'Read my code'. Keep it in step with the code; the Product Owner confirms it in PIL.",
+  "product": "Client Onboarding",
+  "repos": [{ "name": "client-onboarding-demo", "language": "JavaScript (browser), Node for tests" }],
+  "services": [
+    {
+      "name": "KYC Checks",
+      "repo": "client-onboarding-demo",
+      "paths": ["src/checks.js", "src/countries.js"],
+      "dataObjects": ["Client", "Risk Rating", "Evidence"],
+      "systemOfRecord": "Intake queue (browser storage in this demo)",
+      "keywords": ["kyc", "check", "checks", "screening", "risk", "rating", "country", "owner", "owners", "beneficial", "passport", "passports", "expired", "expiry", "document", "documents", "evidence", "rule", "rules"],
+      "regulated": true,
+      "personalData": true
+    },
+    {
+      "name": "Intake Screens",
+      "repo": "client-onboarding-demo",
+      "paths": ["index.html", "src/app.js", "src/styles.css"],
+      "dataObjects": ["Client"],
+      "keywords": ["intake", "form", "screen", "page", "queue", "flag", "flags", "show", "display", "upload", "view"],
+      "regulated": false,
+      "personalData": true
+    },
+    {
+      "name": "Feature Flags",
+      "repo": "client-onboarding-demo",
+      "paths": ["src/flags.js"],
+      "dataObjects": [],
+      "keywords": ["flag", "flags", "feature", "toggle"],
+      "regulated": false,
+      "personalData": false
+    }
+  ],
+  "environments": ["staging", "production"],
+  "pipelines": ["ci (tests on every pull request)", "deploy (staging or production on GitHub Pages)"]
+}

@@ -1,0 +1,71 @@
+# Deploys to GitHub Pages. PIL starts this workflow: staging from the change's branch,
+# production from main after the Product Owner approves the release.
+# Staging is published at <site>/staging/, production at the site root, both from the gh-pages branch.
+name: deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Where to deploy
+        type: choice
+        options: [staging, production]
+        required: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pages-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      TARGET: ${{ inputs.environment }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Test
+        run: npm test
+      - name: Production deploys only from main
+        if: inputs.environment == 'production' && github.ref != 'refs/heads/main'
+        run: |
+          echo "Production can only be deployed from main (got ${GITHUB_REF})."
+          exit 1
+      - name: Build
+        run: node scripts/build.mjs --env "$TARGET" --sha "${{ github.sha }}" --out dist
+      - name: Publish to the gh-pages branch
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git ls-remote --exit-code --heads origin gh-pages >/dev/null; then
+            git fetch origin gh-pages
+            git worktree add site origin/gh-pages
+            cd site
+            git checkout -B gh-pages
+          else
+            git worktree add --detach site
+            cd site
+            git checkout --orphan gh-pages
+            git rm -rf --quiet .
+          fi
+          if [ "$TARGET" = "production" ]; then
+            find . -mindepth 1 -maxdepth 1 ! -name .git ! -name staging -exec rm -rf {} +
+            cp -R ../dist/. .
+          else
+            rm -rf staging
+            mkdir staging
+            cp -R ../dist/. staging/
+          fi
+          touch .nojekyll
+          git add -A
+          git commit --quiet -m "Deploy ${TARGET} from ${GITHUB_SHA}" || echo "Nothing changed"
+          git push origin gh-pages
+          echo "Deployed ${TARGET} from ${GITHUB_SHA}" >> "$GITHUB_STEP_SUMMARY"

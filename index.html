@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Client Onboarding</title>
+    <link rel="stylesheet" href="src/styles.css" />
+  </head>
+  <body>
+    <div id="envbar" class="envbar" hidden></div>
+    <header class="top">
+      <div>
+        <h1>Client Onboarding</h1>
+        <p class="muted">Intake for new clients before KYC screening. Demo data only.</p>
+      </div>
+    </header>
+    <main>
+      <section class="card" aria-labelledby="intake-h">
+        <h2 id="intake-h">New client intake</h2>
+        <form id="intake" novalidate></form>
+      </section>
+      <section class="card" aria-labelledby="result-h">
+        <h2 id="result-h">Intake check</h2>
+        <div id="result" aria-live="polite"><p class="muted">Fill in the intake and press Check.</p></div>
+      </section>
+      <section class="card wide" aria-labelledby="queue-h">
+        <div class="cardhead">
+          <h2 id="queue-h">Intake queue</h2>
+          <button type="button" class="btn quiet" id="reset">Reset sample data</button>
+        </div>
+        <div class="tablewrap"><table id="queue"></table></div>
+      </section>
+    </main>
+    <footer class="foot muted" id="version">Version: local</footer>
+    <script type="module" src="src/app.js"></script>
+  </body>
+</html>

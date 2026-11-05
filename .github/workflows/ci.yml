@@ -1,0 +1,22 @@
+# Runs the tests on every pull request and on every push to main.
+# PIL's Test step waits for this run on the pull request's latest commit.
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm test
+      - run: node scripts/build.mjs --env local --sha "${{ github.sha }}" --out dist

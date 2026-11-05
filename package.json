@@ -1,0 +1,15 @@
+{
+  "name": "client-onboarding-demo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A small Client Onboarding app for testing PIL's delivery pipeline end to end.",
+  "type": "module",
+  "scripts": {
+    "test": "node --test",
+    "build": "node scripts/build.mjs --env local --out dist",
+    "start": "npx --yes http-server -c-1 -p 8080 ."
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
